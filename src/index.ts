@@ -1,3 +1,8 @@
-import getTradeValues from './utils/webScraper';
+import logger from './utils/logger';
+import { PORT } from './utils/config';
+import { app } from './app';
 
-getTradeValues();
+app.listen(PORT, () => {
+  logger.info(`Server running on port  
+    http://localhost:${PORT}`);
+});

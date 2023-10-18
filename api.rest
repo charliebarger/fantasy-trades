@@ -1,0 +1,5 @@
+// get player data
+
+###
+GET http://localhost:3001/api/players
+Content-Type: application/json
