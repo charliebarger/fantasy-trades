@@ -1,89 +1,38 @@
 import express from 'express';
-import axios from 'axios';
-import getOrSetCache from '../utils/redisCache';
+import { searchPlayers, getAllPlayers } from '../utils/redis/searchPlayers';
 
 const playerRouter = express.Router();
 
-interface PlayerData {
-  player: {
-    id: number;
-    name: string;
-    mflId: string;
-    sleeperId: string;
-    position: string;
-    maybeBirthday: string;
-    maybeHeight: string;
-    maybeWeight: number;
-    maybeCollege: string;
-    maybeTeam: string;
-    maybeAge: number;
-    maybeYoe: number;
-    espnId: string;
-    fleaflickerId: string;
-  };
-  value: number;
-  overallRank: number;
-  positionRank: number;
-  trend30Day: number;
-  redraftDynastyValueDifference: number;
-  redraftDynastyValuePercDifference: number;
-  redraftValue: number;
-  combinedValue: number;
-  maybeMovingStandardDeviation: number;
-  maybeMovingStandardDeviationPerc: number;
-  maybeMovingStandardDeviationAdjusted: number;
-  displayTrend: boolean;
-  maybeOwner: any;
-  starter: boolean;
-  maybeTier: number;
-  maybeAdp: any;
-  maybeTradeFrequency: number;
-}
+playerRouter.get('/', async (req, res) => {
+  const players = await getAllPlayers();
+  res.send(players);
+});
 
-export interface CachedPlayerData {
-  name: string;
-  position: string;
-  espnId: string;
-  value: number;
-}
+playerRouter.get('/search', async (req, res) => {
+  const position = req.query.position;
+  let name = req.query.name;
 
-const fantasyCalcApi = axios.get(
-  'https://api.fantasycalc.com/values/current?isDynasty=false&numQbs=1&numTeams=12&ppr=1'
-);
-
-const getTradeValues = async (): Promise<
-  {
-    name: string;
-    position: string;
-    espnId: string;
-    value: number;
-  }[]
-> => {
-  const { data }: { data: PlayerData[] } = await fantasyCalcApi;
-  const players = data.map(
-    (playerInfo: PlayerData): CachedPlayerData => ({
-      name: playerInfo.player.name,
-      position: playerInfo.player.position,
-      espnId: playerInfo.player.espnId,
-      value: Math.round(playerInfo.value / 100),
-    })
-  );
-  return players;
-};
-
-playerRouter.get('/', async (_req, res) => {
-  try {
-    const tradeValues = await getTradeValues();
-
-    const values = tradeValues.map(async (player) => {
-      return asyncFunction(player);
-    });
-
-    const data = await getOrSetCache('players', getTradeValues);
-    return res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ error: 'could not retrieve data' });
+  if (name) {
+    if (typeof name === 'string') {
+      if (name.includes('_')) {
+        let nameArr = name.split('_');
+        //if the last name is empty or only one character, remove it
+        if (
+          nameArr[nameArr.length - 1].length === 0 ||
+          nameArr[nameArr.length - 1].length === 1
+        ) {
+          nameArr.pop();
+        }
+        //append wildcard to each name
+        name = nameArr.join('* ');
+      }
+    }
   }
+
+  const queryString = name ? `@name:(${name}*)` : `@position:${position}`;
+
+  const searchResults = await searchPlayers(queryString);
+  res.send(searchResults);
 });
 
 export default playerRouter;

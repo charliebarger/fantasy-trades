@@ -3,6 +3,7 @@ import { requestLogger, unknownEndpoint } from './utils/middleware';
 import playerRouter from './controllers/players';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { job } from './cronJobs';
 
 dotenv.config();
 
@@ -14,5 +15,8 @@ app.use(requestLogger);
 app.use(`${baseUrl}/players`, playerRouter);
 app.use(unknownEndpoint);
 app.use(express.json());
+
+//start cron job
+job.start();
 
 export { app };
