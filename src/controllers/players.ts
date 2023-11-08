@@ -1,38 +1,37 @@
 import express from 'express';
 import { searchPlayers, getAllPlayers } from '../utils/redis/searchPlayers';
+import { addWildcardToString } from '../utils/utils';
 
 const playerRouter = express.Router();
 
 playerRouter.get('/', async (req, res) => {
-  const players = await getAllPlayers();
-  res.send(players);
+  try {
+    const players = await getAllPlayers();
+    res.send(players);
+  } catch (error) {
+    res.status(500).send('An error occurred while processing your request.');
+  }
 });
 
 playerRouter.get('/search', async (req, res) => {
-  const position = req.query.position;
-  let name = req.query.name;
+  try {
+    const position = req.query.position;
+    let name = req.query.name;
 
-  if (name) {
-    if (typeof name === 'string') {
-      if (name.includes('_')) {
-        let nameArr = name.split('_');
-        //if the last name is empty or only one character, remove it
-        if (
-          nameArr[nameArr.length - 1].length === 0 ||
-          nameArr[nameArr.length - 1].length === 1
-        ) {
-          nameArr.pop();
-        }
-        //append wildcard to each name
-        name = nameArr.join('* ');
+    if (name) {
+      if (typeof name === 'string') {
+        name = addWildcardToString(name);
       }
     }
+
+    const queryString = name ? `@name:(${name}*)` : `@position:${position}`;
+
+    const searchResults = await searchPlayers(queryString);
+    res.send(searchResults);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('An error occurred while processing your request.');
   }
-
-  const queryString = name ? `@name:(${name}*)` : `@position:${position}`;
-
-  const searchResults = await searchPlayers(queryString);
-  res.send(searchResults);
 });
 
 export default playerRouter;

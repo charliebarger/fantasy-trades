@@ -1,31 +1,26 @@
 import { redisClient } from './connection';
 
-interface PlayerData {
+export interface PlayerId {
   id: string;
-  value?: number;
 }
 
-export interface Trade {
-  id: string;
-  teamA: PlayerData[];
-  teamB: PlayerData[];
+export interface PlayerWithValues extends PlayerId {
+  value: number;
 }
 
-const exampleTrade: Trade = {
-  id: '123',
-  teamA: [
-    {
-      id: 'Logan-Thomas',
-      value: 1,
-    },
-  ],
-  teamB: [
-    {
-      id: 'Terry-McLaurin',
-      value: 3,
-    },
-  ],
-};
+export type Trade =
+  | {
+      id: string;
+      fleece: false;
+      teamA: PlayerId[];
+      teamB: PlayerId[];
+    }
+  | {
+      id: string;
+      fleece: true;
+      teamA: PlayerWithValues[];
+      teamB: PlayerWithValues[];
+    };
 
 export const saveTrade = async (trade: Trade) => {
   const client = await redisClient;

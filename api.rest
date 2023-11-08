@@ -17,10 +17,17 @@ POST http://localhost:3000/api/trades
 Content-Type: application/json
 
 {
-  "id": "1004",
+  "id": "1008",
+  "fleece" : false,
   "teamA": [
     {
       "id": "Logan-Thomas"
+    },
+    {
+      "id": "Antonio-Gibson"
+    },
+    {
+      "id": "Christian-McCaffrey"
     }
   ],
   "teamB": [
@@ -32,5 +39,5 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/api/trades/1004
+GET http://localhost:3000/api/trades/1008
 Content-Type: application/json
