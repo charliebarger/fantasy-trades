@@ -1,8 +1,8 @@
 import { redisClient } from './connection';
 import { SchemaFieldTypes } from 'redis';
-import { fantasyCalcApi } from '../externalApis';
 
 import { PlayerData, CachedPlayerData } from '../../types';
+import { fantasyCalcApi } from '../externalApis';
 
 export const getTradeValues = async (): Promise<CachedPlayerData[]> => {
   const { data }: { data: PlayerData[] } = await fantasyCalcApi;
@@ -55,4 +55,25 @@ export const updatePlayersTradeValues = async () => {
       }
     );
   }
+};
+
+export const getPlayerById = async (id: string): Promise<CachedPlayerData> => {
+  console.log('getting player by id', id);
+  const client = await redisClient;
+  const playerData = (await client.json.get(
+    `players:${id}`
+  )) as unknown as CachedPlayerData;
+
+  console.log(playerData, 'player data');
+
+  if (playerData) {
+    return {
+      name: playerData.name,
+      position: playerData.position,
+      espnId: playerData.espnId,
+      value: playerData.value,
+      team: playerData.team,
+    };
+  }
+  throw new Error('Player not found');
 };

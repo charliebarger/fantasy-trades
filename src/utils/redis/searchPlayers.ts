@@ -29,7 +29,6 @@ export const searchPlayers = async (queryString: string) => {
     },
   })) as unknown as searchPlayersResponse;
 
-  console.dir(players, { depth: null });
   //just return the values
   return players.documents.map((player) => player.value);
 };
