@@ -39,6 +39,14 @@ tradeRouter.post('/', async (req, res) => {
       res.status(400).send('Invalid trade data');
       return;
     }
+    //if trade with same id exists, return error
+    const existingTrade = await getTrade(trade.id);
+    console.log(existingTrade, 'existingTrade');
+    if (existingTrade) {
+      console.log('trade already exists');
+      res.status(409).send('Trade already exists');
+      return;
+    }
     saveTrade(trade as Trade);
     res.send('Trade saved').status(200);
   } catch (error) {

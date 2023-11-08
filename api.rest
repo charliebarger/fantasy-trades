@@ -17,7 +17,7 @@ POST http://localhost:3000/api/trades
 Content-Type: application/json
 
 {
-  "id": "1008",
+  "id": "100111",
   "fleece" : false,
   "teamA": [
     {
