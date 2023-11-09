@@ -16,6 +16,19 @@ interface searchPlayersResponse {
   documents: SearchResult[];
 }
 
+export const deleteAllPlayers = async () => {
+  try {
+    const client = await redisClient;
+    await client.ft.dropIndex('idx:players', {
+      DD: true,
+    });
+    console.log('deleted all players');
+    return true;
+  } catch (error) {
+    throw new Error("Couldn't delete all players");
+  }
+};
+
 export const searchPlayers = async (queryString: string) => {
   const client = await redisClient;
   const players = (await client.ft.search('idx:players', queryString, {
@@ -36,17 +49,20 @@ export const searchPlayers = async (queryString: string) => {
 export const getAllPlayers = async () => {
   const client = await redisClient;
   console.log('getting all players');
-  const players = (await client.ft.search('idx:players', '*', {
-    LIMIT: {
-      from: 0,
-      size: 1000,
-    },
-    SORTBY: {
-      BY: 'value',
-      DIRECTION: 'DESC',
-    },
-  })) as unknown as searchPlayersResponse;
-
-  console.dir(players, { depth: null });
-  return players.documents.map((player) => player.value);
+  try {
+    const players = (await client.ft.search('idx:players', '*', {
+      LIMIT: {
+        from: 0,
+        size: 1000,
+      },
+      SORTBY: {
+        BY: 'value',
+        DIRECTION: 'DESC',
+      },
+    })) as unknown as searchPlayersResponse;
+    console.dir(players, { depth: null });
+    return players.documents.map((player) => player.value);
+  } catch (error) {
+    console;
+  }
 };
