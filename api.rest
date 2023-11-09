@@ -8,7 +8,7 @@ Content-Type: application/json
 GET http://localhost:3000/api/players/search?position=QB
 
 ###
-GET http://localhost:3000/api/players/search?name=Collins
+GET http://localhost:3000/api/players/search?name=NIc
 
 //trades
 
@@ -17,7 +17,7 @@ POST http://localhost:3000/api/trades
 Content-Type: application/json
 
 {
-  "id": "100111",
+  "id": "1002",
   "fleece" : false,
   "teamA": [
     {
