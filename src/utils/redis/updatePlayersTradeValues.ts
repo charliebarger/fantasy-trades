@@ -44,9 +44,25 @@ export const updatePlayersTradeValues = async () => {
       {
         '$.name': {
           type: SchemaFieldTypes.TEXT,
+          AS: 'name',
+          SORTABLE: true,
         },
         '$.position': {
           type: SchemaFieldTypes.TEXT,
+          AS: 'position',
+        },
+        '$.espnId': {
+          type: SchemaFieldTypes.TEXT,
+          AS: 'espnId',
+        },
+        '$.value': {
+          type: SchemaFieldTypes.NUMERIC,
+          AS: 'value',
+          SORTABLE: true,
+        },
+        '$.team': {
+          type: SchemaFieldTypes.TEXT,
+          AS: 'team',
         },
       },
       {

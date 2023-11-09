@@ -5,10 +5,10 @@ GET http://localhost:3000/api/players
 Content-Type: application/json
 
 ### 
-GET http://localhost:3000/api/players/search?position=QB
+GET http://localhost:3000/api/players/search?position=WR
 
 ###
-GET http://localhost:3000/api/players/search?name=Collins
+GET http://localhost:3000/api/players/search?name=Christian_Mc
 
 //trades
 
@@ -17,8 +17,8 @@ POST http://localhost:3000/api/trades
 Content-Type: application/json
 
 {
-  "id": "100111",
-  "fleece" : false,
+  "id": "10011w",
+  "fleece" : true,
   "teamA": [
     {
       "id": "Logan-Thomas"
@@ -39,5 +39,5 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/api/trades/1008
+GET http://localhost:3000/api/trades/10011w
 Content-Type: application/json
