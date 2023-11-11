@@ -28,6 +28,7 @@ tradeRouter.get('/:id', async (req, res) => {
       teamB,
     });
   } catch (error) {
+    console.log('myt ');
     res.status(404).send('Trade not found');
   }
 });
@@ -41,7 +42,6 @@ tradeRouter.post('/', async (req, res) => {
     }
     //if trade with same id exists, return error
     const existingTrade = await getTrade(trade.id);
-    console.log(existingTrade, 'existingTrade');
     if (existingTrade) {
       console.log('trade already exists');
       res.status(409).send('Trade already exists');

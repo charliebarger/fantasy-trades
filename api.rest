@@ -12,19 +12,17 @@ GET http://localhost:3000/api/players/search?name=Christian_Mc
 
 //trades
 
+//trade in fleece mode
 ###
 POST http://localhost:3000/api/trades
 Content-Type: application/json
 
 {
-  "id": "10011w",
+  "id": "1",
   "fleece" : true,
   "teamA": [
     {
-      "id": "Logan-Thomas"
-    },
-    {
-      "id": "Antonio-Gibson"
+      "id": "Austin-Ekeler"
     },
     {
       "id": "Christian-McCaffrey"
@@ -32,12 +30,42 @@ Content-Type: application/json
   ],
   "teamB": [
     {
-      "id": "Terry-McLaurin",
+      "id": "Keenan-Allen",
+      "value": 200
+    }
+  ]
+}
+
+//trade in fair mode
+
+###
+POST http://localhost:3000/api/trades
+Content-Type: application/json
+
+{
+  "id": "2",
+  "fleece" : false,
+  "teamA": [
+    {
+      "id": "Austin-Ekeler"
+    },
+    {
+      "id": "Christian-McCaffrey"
+    }
+  ],
+  "teamB": [
+    {
+      "id": "Keenan-Allen",
       "value": 200
     }
   ]
 }
 
 ###
-GET http://localhost:3000/api/trades/10011w
+GET http://localhost:3000/api/trades/2
+Content-Type: application/json
+
+//trade that does not exist
+###
+GET http://localhost:3000/api/trades/3
 Content-Type: application/json

@@ -2,6 +2,7 @@ import { PlayerId, PlayerWithValues } from '../utils/redis/saveTrade';
 import { Trade } from '../utils/redis/saveTrade';
 import { getPlayerById } from '../utils/redis/updatePlayersTradeValues';
 import { CachedPlayerData } from '../types';
+import { deleteAllPlayers } from './redis/searchPlayers';
 
 export const removeUnderScores = (str: string) => {
   return str.replace(/_/g, ' ');

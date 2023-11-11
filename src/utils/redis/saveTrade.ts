@@ -42,11 +42,13 @@ export const getTrade = async (id: string): Promise<Trade | undefined> => {
     try {
       const trade = await client.json.get(`trades:${id}`);
       if (trade) {
+        console.log('Trade found');
         return JSON.parse(trade as string) as Trade;
       }
       throw new Error('Trade not found');
     } catch (error) {
       console.log(error);
+      throw new Error('Trade not found');
     }
   });
 };

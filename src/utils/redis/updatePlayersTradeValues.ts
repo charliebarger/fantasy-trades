@@ -1,10 +1,11 @@
 import { SchemaFieldTypes } from 'redis';
 import { withRedisClient } from './connection';
 import { PlayerData, CachedPlayerData } from '../../types';
-import { fantasyCalcApi } from '../externalApis';
+import { fantasyCalcApi, getFantasyCalcData } from '../externalApis';
+import { deleteAllPlayers } from './searchPlayers';
 
 export const getTradeValues = async (): Promise<CachedPlayerData[]> => {
-  const { data }: { data: PlayerData[] } = await fantasyCalcApi;
+  const { data }: { data: PlayerData[] } = await getFantasyCalcData();
   const players = data.map(
     (playerInfo: PlayerData): CachedPlayerData => ({
       name: playerInfo.player.name,
@@ -21,7 +22,6 @@ export const updatePlayersTradeValues = async () => {
   return withRedisClient(async (client) => {
     try {
       const players = await getTradeValues();
-
       players.forEach(async (player: CachedPlayerData) => {
         client.json.set(
           `players:${player.name.split(' ').join('-')}`,
@@ -32,9 +32,6 @@ export const updatePlayersTradeValues = async () => {
           }
         );
       });
-
-      const indexInfo = await client.ft.info('idx:players');
-      console.log(indexInfo, 'index exists');
     } catch (error) {
       console.log('no index found... creating one...');
       try {
@@ -70,6 +67,7 @@ export const updatePlayersTradeValues = async () => {
           }
         );
       } catch (error) {
+        console.log(error, 'my error');
         console.log("Couldn't create index");
       }
     }
@@ -96,4 +94,9 @@ export const getPlayerById = async (id: string): Promise<CachedPlayerData> => {
     }
     throw new Error('Player not found');
   });
+};
+
+export const deleteAndUpdatePlayers = async () => {
+  await deleteAllPlayers();
+  updatePlayersTradeValues();
 };

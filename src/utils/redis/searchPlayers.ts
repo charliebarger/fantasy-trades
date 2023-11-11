@@ -1,5 +1,6 @@
 import { CachedPlayerData } from '../../types';
 import { withRedisClient } from './connection';
+import { updatePlayersTradeValues } from './updatePlayersTradeValues';
 
 interface SearchResult {
   id: string;
@@ -19,12 +20,19 @@ interface searchPlayersResponse {
 export const deleteAllPlayers = async () => {
   return withRedisClient(async (client) => {
     try {
-      await client.ft.dropIndex('idx:players', {
-        DD: true,
-      });
-      console.log('deleted all players');
+      //if index exists, delete it
+      try {
+        const indexInfo = await client.ft.info('idx:players');
+        console.log(indexInfo, 'index exists');
+        await client.ft.dropIndex('idx:players', {
+          DD: true,
+        });
+      } catch (error) {
+        console.log('no index ');
+      }
       return true;
     } catch (error) {
+      console.log(error);
       throw new Error("Couldn't delete all players");
     }
   });
