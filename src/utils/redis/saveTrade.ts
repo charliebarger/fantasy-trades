@@ -1,4 +1,4 @@
-import { redisClient } from './connection';
+import { withRedisClient } from './connection';
 
 export interface PlayerId {
   id: string;
@@ -23,28 +23,30 @@ export type Trade =
     };
 
 export const saveTrade = async (trade: Trade) => {
-  const client = await redisClient;
-  try {
-    client.json.set(`trades:${trade.id}`, '.', JSON.stringify(trade), {
-      NX: true,
-    });
-    //trade expires in 7 days
-    client.expire(`trades:${trade.id}`, 604800);
-    console.log('Trade saved');
-  } catch (error) {
-    console.log(error);
-  }
+  return withRedisClient(async (client) => {
+    try {
+      client.json.set(`trades:${trade.id}`, '.', JSON.stringify(trade), {
+        NX: true,
+      });
+      //trade expires in 7 days
+      client.expire(`trades:${trade.id}`, 604800);
+      console.log('Trade saved');
+    } catch (error) {
+      console.log(error);
+    }
+  });
 };
 
 export const getTrade = async (id: string): Promise<Trade | undefined> => {
-  const client = await redisClient;
-  try {
-    const trade = await client.json.get(`trades:${id}`);
-    if (trade) {
-      return JSON.parse(trade as string) as Trade;
+  return withRedisClient(async (client) => {
+    try {
+      const trade = await client.json.get(`trades:${id}`);
+      if (trade) {
+        return JSON.parse(trade as string) as Trade;
+      }
+      throw new Error('Trade not found');
+    } catch (error) {
+      console.log(error);
     }
-    throw new Error('Trade not found');
-  } catch (error) {
-    console.log(error);
-  }
+  });
 };

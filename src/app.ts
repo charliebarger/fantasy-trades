@@ -2,13 +2,9 @@ import express from 'express';
 import { requestLogger, unknownEndpoint } from './utils/middleware';
 import playerRouter from './controllers/players';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { job } from './cronJobs';
 import tradeRouter from './controllers/trade';
-import { updatePlayersTradeValues } from './utils/redis/updatePlayersTradeValues';
-import { deleteAllPlayers } from './utils/redis/searchPlayers';
-
-dotenv.config();
+import './utils/config';
 
 const baseUrl = process.env.BASE_URL || '/api';
 const app = express();
