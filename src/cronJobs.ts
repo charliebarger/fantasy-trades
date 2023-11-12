@@ -1,5 +1,5 @@
 import { CronJob } from 'cron';
-import { deleteAndUpdatePlayers } from './utils/redis/updatePlayersTradeValues';
+import { deleteAndUpdatePlayers } from './utils/redis/playerOperations';
 
 //cron job that runs every 12 hours
 

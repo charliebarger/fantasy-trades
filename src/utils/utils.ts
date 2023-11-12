@@ -1,39 +1,4 @@
-import { PlayerId, PlayerWithValues } from '../utils/redis/saveTrade';
-import { Trade } from '../utils/redis/saveTrade';
-import { getPlayerById } from '../utils/redis/updatePlayersTradeValues';
-import { CachedPlayerData } from '../types';
-import { deleteAllPlayers } from './redis/searchPlayers';
-
-export const removeUnderScores = (str: string) => {
-  return str.replace(/_/g, ' ');
-};
-
-const addFakeValues = (player: CachedPlayerData, value: number) => {
-  return {
-    ...player,
-    value,
-  };
-};
-
-export const getPlayerData = async (
-  playerArr: PlayerId[] | PlayerWithValues[],
-  thisIsAFleece: boolean
-): Promise<CachedPlayerData[]> => {
-  return Promise.all(
-    playerArr.map(async (player) => {
-      const playerData = await getPlayerById(player.id);
-      if (thisIsAFleece) {
-        const playerWithValues = player as PlayerWithValues;
-        return addFakeValues(
-          playerData,
-          playerWithValues.value || playerData.value
-        );
-      } else {
-        return playerData;
-      }
-    })
-  );
-};
+import { Trade } from '../types';
 
 export function isTrade(obj: any): obj is Trade {
   return (
@@ -61,3 +26,9 @@ export function addWildcardToString(str: string) {
   }
   return str;
 }
+
+export const createError = (statusCode: number, message: string): Error => {
+  const error: any = new Error(message);
+  error.statusCode = statusCode;
+  return error;
+};

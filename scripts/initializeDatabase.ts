@@ -1,5 +1,4 @@
-import { updatePlayersTradeValues } from '../src/utils/redis/updatePlayersTradeValues';
-
+import { updatePlayersTradeValues } from '../src/utils/redis/playerOperations';
 import dotenvFlow from 'dotenv-flow';
 dotenvFlow.config();
 

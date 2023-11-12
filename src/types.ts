@@ -41,3 +41,25 @@ export interface CachedPlayerData {
   value: number;
   team: string;
 }
+
+export interface PlayerId {
+  id: string;
+}
+
+export interface PlayerWithValues extends PlayerId {
+  value: number;
+}
+
+export type Trade =
+  | {
+      id: string;
+      fleece: false;
+      teamA: PlayerId[];
+      teamB: PlayerId[];
+    }
+  | {
+      id: string;
+      fleece: true;
+      teamA: PlayerWithValues[];
+      teamB: PlayerWithValues[];
+    };
