@@ -12,10 +12,6 @@ export async function withRedisClient<T>(
           url: `redis://${process.env.REDIS_URL}:${process.env.REDIS_PORT}`,
         });
   redisClient.connect();
-  // if (process.env.NODE_ENV === 'development') {
-  //   redisClient.select(1);
-  // }
-
   try {
     const client = await redisClient;
     return await callback(client);

@@ -7,6 +7,14 @@ This project requires Redis Stack Server to be installed on your local machine. 
 1. Download Redis Stack Server from the official website.
 2. Follow the installation guide to install it on your machine.
 
+### Initializing the Database
+
+You can add players to the database running
+
+```bash
+npm run initialize
+```
+
 ## Running the Project
 
 Once you have installed Redis Stack Server, you can start the server by running the `prestart` script:

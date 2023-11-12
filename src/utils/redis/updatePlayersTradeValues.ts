@@ -33,6 +33,17 @@ export const updatePlayersTradeValues = async () => {
         );
       });
     } catch (error) {
+      console.log("Couldn't update players");
+    }
+    try {
+      const indexExists = await client.ft.info('idx:players');
+      if (indexExists) {
+        console.log('index exists');
+        return;
+      } else {
+        throw new Error('no index found');
+      }
+    } catch (error) {
       console.log('no index found... creating one...');
       try {
         await client.ft.create(

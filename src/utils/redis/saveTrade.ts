@@ -45,7 +45,7 @@ export const getTrade = async (id: string): Promise<Trade | undefined> => {
         console.log('Trade found');
         return JSON.parse(trade as string) as Trade;
       }
-      throw new Error('Trade not found');
+      return undefined;
     } catch (error) {
       console.log(error);
       throw new Error('Trade not found');

@@ -15,7 +15,7 @@ tradeRouter.get('/:id', async (req, res) => {
     }
     const trade = await getTrade(id);
     if (!trade) {
-      res.send('Trade not found').status(404);
+      res.status(404).send('Trade not found');
       return;
     }
     //if trade is found find the players

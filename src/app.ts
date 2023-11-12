@@ -5,11 +5,7 @@ import cors from 'cors';
 import { getCronJob } from './cronJobs';
 import tradeRouter from './controllers/trade';
 import './utils/config';
-import {
-  deleteAndUpdatePlayers,
-  updatePlayersTradeValues,
-} from './utils/redis/updatePlayersTradeValues';
-import { deleteAllPlayers } from './utils/redis/searchPlayers';
+import { deleteAndUpdatePlayers } from './utils/redis/updatePlayersTradeValues';
 const baseUrl = process.env.BASE_URL || '/api';
 
 const app = express();
@@ -27,8 +23,6 @@ if (process.env.NODE_ENV === 'production') {
   const job = getCronJob();
   deleteAndUpdatePlayers();
   job.start();
-} else {
-  updatePlayersTradeValues();
 }
 
 export { app };
